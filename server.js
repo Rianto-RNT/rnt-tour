@@ -1,18 +1,20 @@
-const express = require('express');
+const fs = require('fs')
+const express = require('express')
 
-const app = express();
+const app = express()
 
-const port = 3000;
+const port = 3000
 
-app.get('/', (req, res) => {
-  res.status(200).json({ message: 'Hello, World!' });
-});
+const tours = JSON.parse(
+  fs.readFileSync(`${__dirname}/data/json/simple-tours.json`)
+)
 
-app.post('/', (req, res) => {
-  res.status(200);
-  res.json({ message: 'Handling a POST request' });
-});
+app.get('/api/v1/tours', (req, res) => {
+  res
+    .status(200)
+    .json({ status: 'success', result: tours.length, data: { tours } })
+})
 
 app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
-});
+  console.log(`App listening on port ${port}`)
+})

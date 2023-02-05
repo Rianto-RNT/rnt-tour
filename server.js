@@ -1,9 +1,18 @@
 const fs = require('fs')
 const express = require('express')
+const morgan = require('morgan')
 
 const app = express()
 
+// MIDDLEWARE
+app.use(morgan('dev'))
+
 app.use(express.json()) // to support JSON-encoded bodies
+
+app.use((req, res, next) => {
+  console.log('middleware lewat...')
+  next()
+})
 
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/data/json/simple-tours.json`)
@@ -17,7 +26,6 @@ const getTours = (req, res) => {
 }
 
 const getTour = (req, res) => {
-  console.log(req.params)
   const tourId = Number(req.params.id)
   const tour = tours.find((tour) => tour.id === tourId)
 

@@ -9,13 +9,14 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/data/json/simple-tours.json`)
 )
 
-app.get('/api/v1/tours', (req, res) => {
+// CONTROLLERS
+const getTours = (req, res) => {
   res
     .status(200)
     .json({ status: 'Success Get All', result: tours.length, data: { tours } })
-})
+}
 
-app.get('/api/v1/tours/:id', (req, res) => {
+const getTour = (req, res) => {
   console.log(req.params)
   const tourId = Number(req.params.id)
   const tour = tours.find((tour) => tour.id === tourId)
@@ -27,16 +28,14 @@ app.get('/api/v1/tours/:id', (req, res) => {
     })
   }
 
-  res
-    .status(200)
-    .json({
-      status: 'Success Get One',
-      message: `Tour dengan ID:'${Number(req.params.id)}' berhasil ditemukan`,
-      data: { tour },
-    })
-})
+  res.status(200).json({
+    status: 'Success Get One',
+    message: `Tour dengan ID:'${Number(req.params.id)}' berhasil ditemukan`,
+    data: { tour },
+  })
+}
 
-app.post('/api/v1/tours', (req, res) => {
+const createTour = (req, res) => {
   const newId = tours[tours.length - 1].id + 1
   const newTour = Object.assign({ id: newId }, req.body)
 
@@ -53,15 +52,16 @@ app.post('/api/v1/tours', (req, res) => {
 
       res.status(201).json({
         status: 'Success Create',
+        message: `Berhasil membuat tour baru dengan ID:'${Number(newId)}' `,
         data: {
           tour: newTour,
         },
       })
     }
   )
-})
+}
 
-app.patch('/api/v1/tours/:id', (req, res) => {
+const patchTour = (req, res) => {
   const tourId = Number(req.params.id)
   const tourIndex = tours.findIndex((tour) => tour.id === tourId)
 
@@ -96,9 +96,9 @@ app.patch('/api/v1/tours/:id', (req, res) => {
       })
     }
   )
-})
+}
 
-app.delete('/api/v1/tours/:id', (req, res) => {
+const deleteTour = (req, res) => {
   const tourId = Number(req.params.id)
   const tourIndex = tours.findIndex((tour) => tour.id === tourId)
 
@@ -125,15 +125,18 @@ app.delete('/api/v1/tours/:id', (req, res) => {
       // Return a success response
       res.status(204).json({
         status: 'Success Delete',
-        message: `Data tour dengan ID:'${Number(
-          req.params.id
-        )}' berhasil dihapus`,
+        message: `Tour dengan ID:'${Number(req.params.id)}' berhasil dihapus`,
         data: null,
       })
     }
   )
-})
+}
 
+// ROUTES
+app.route('/api/v1/tours').get(getTours).post(createTour)
+app.route('/api/v1/tours/:id').get(getTour).patch(patchTour).delete(deleteTour)
+
+// SERVER
 const port = 3000
 
 app.listen(port, () => {

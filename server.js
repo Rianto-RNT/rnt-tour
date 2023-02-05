@@ -18,7 +18,7 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/data/json/simple-tours.json`)
 )
 
-// CONTROLLERS
+// TOUR CONTROLLERS
 const getTours = (req, res) => {
   res
     .status(200)
@@ -140,9 +140,45 @@ const deleteTour = (req, res) => {
   )
 }
 
-// ROUTES
+// USER CONTROLLERS
+const getUsers = (req, res) => {
+  res.status(200).json({
+    status: 'Not ready',
+    message: 'Masih disiapin routesnya',
+  })
+}
+const getUser = (req, res) => {
+  res.status(200).json({
+    status: 'Not ready',
+    message: 'Masih disiapin routesnya',
+  })
+}
+const createUser = (req, res) => {
+  res.status(200).json({
+    status: 'Not ready',
+    message: 'Masih disiapin routesnya',
+  })
+}
+const patchUser = (req, res) => {
+  res.status(200).json({
+    status: 'Not ready',
+    message: 'Masih disiapin routesnya',
+  })
+}
+const deleteUser = (req, res) => {
+  res.status(200).json({
+    status: 'Not ready',
+    message: 'Masih disiapin routesnya',
+  })
+}
+
+// ROUTES TOURS
 app.route('/api/v1/tours').get(getTours).post(createTour)
 app.route('/api/v1/tours/:id').get(getTour).patch(patchTour).delete(deleteTour)
+
+// ROUTES USERS
+app.route('/api/v1/users').get(getUsers).post(createUser)
+app.route('/api/v1/users/:id').get(getUser).patch(patchUser).delete(deleteUser)
 
 // SERVER
 const port = 3000

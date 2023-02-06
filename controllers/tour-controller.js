@@ -23,6 +23,18 @@ exports.checkID = (req, res, next, val) => {
   next()
 }
 
+// Middleware func to check body with name and price property
+exports.checkBody = (req, res, next) => {
+  if (!req.body.name || !req.body.price) {
+    return res.status(400).json({
+      status: 'Gagal',
+      message:
+        'Request Body yang anda minta wajib menyertakan properti Nama dan Harga.',
+    })
+  }
+  next()
+}
+
 exports.getTours = (req, res) => {
   res
     .status(200)

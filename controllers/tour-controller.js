@@ -4,6 +4,25 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../data/json/simple-tours.json`)
 )
 
+// Middleware function to check tour ID
+exports.checkID = (req, res, next, val) => {
+  // Check if tour exists
+  const tour = tours.find((tour) => tour.id === Number(val))
+
+  if (!tour) {
+    return res.status(404).json({
+      status: 'Gagal',
+      message: `ID:'${Number(
+        req.params.id
+      )}' yang anda cari tidak ditemukan! Silahkan periksa kembali ID yang anda input.`,
+    })
+  }
+
+  // Attach tour to the request object
+  req.tour = tour
+  next()
+}
+
 exports.getTours = (req, res) => {
   res
     .status(200)
@@ -13,13 +32,6 @@ exports.getTours = (req, res) => {
 exports.getTour = (req, res) => {
   const tourId = Number(req.params.id)
   const tour = tours.find((tour) => tour.id === tourId)
-
-  if (!tour) {
-    return res.status(404).json({
-      status: 'Not Found',
-      message: `ID:'${Number(req.params.id)}' yang anda cari tidak ditemukan!`,
-    })
-  }
 
   res.status(200).json({
     status: 'Success Get One',
@@ -58,15 +70,6 @@ exports.patchTour = (req, res) => {
   const tourId = Number(req.params.id)
   const tourIndex = tours.findIndex((tour) => tour.id === tourId)
 
-  if (tourIndex === -1) {
-    return res.status(404).json({
-      status: 'Failed to update',
-      message: `ID:'${Number(
-        req.params.id
-      )}' yang anda update tidak ditemukan!`,
-    })
-  }
-
   // Update the tour properties
   updatedTour = Object.assign({}, tours[tourIndex], req.body)
   tours[tourIndex] = updatedTour
@@ -94,15 +97,6 @@ exports.patchTour = (req, res) => {
 exports.deleteTour = (req, res) => {
   const tourId = Number(req.params.id)
   const tourIndex = tours.findIndex((tour) => tour.id === tourId)
-
-  if (tourIndex === -1) {
-    return res.status(404).json({
-      status: 'Failed to delete',
-      message: `ID:'${Number(
-        req.params.id
-      )}' yang ingin anda hapus tidak ditemukan!`,
-    })
-  }
 
   tours.splice(tourIndex, 1)
 
